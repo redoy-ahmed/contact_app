@@ -1,4 +1,5 @@
-import 'package:contact_app/db/db_helper.dart';
+import 'dart:io';
+
 import 'package:contact_app/models/contact_model.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -164,8 +165,17 @@ class _ContactDetailsState extends State<ContactDetails> {
   }
 
   _locationToMap() async {
-    String url =
-        'https://www.google.com/maps/search/?api=1&query=${contact.address}';
+    late String url;
+
+    if (Platform.isAndroid) {
+      url = 'geo:0,0?q=${contact.address}';
+    } else if (Platform.isIOS) {
+      url = 'maps://?saddr=${contact.address}';
+    } else {
+      url =
+          'https://www.google.com/maps/search/?api=1&query=${contact.address}';
+    }
+
     bool result = await canLaunchUrl(Uri.parse(url));
     if (result) {
       launchUrl(Uri.parse(url));
