@@ -5,12 +5,14 @@ List<Contact> allContactList = [
       name: 'ABC Last Name',
       mobileNumber: '01717608080',
       email: 'abc@gmail.com',
-      address: 'Computer Ease Limited, Road No 9A, Dhaka'),
+      address: 'Computer Ease Limited, Road No 9A, Dhaka',
+      gender: 'Male'),
   Contact(
       name: 'DEF Last Name',
       mobileNumber: '01717608081',
       email: 'def@gmail.com',
-      address: 'Computer Ease Limited, Road No 9A, Dhaka'),
+      address: 'Computer Ease Limited, Road No 9A, Dhaka',
+      gender: 'Female'),
   Contact(
       name: 'GHI Last Name',
       mobileNumber: '01717608082',

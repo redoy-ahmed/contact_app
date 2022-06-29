@@ -133,6 +133,44 @@ class _ContactDetailsState extends State<ContactDetails> {
                 ),
               ),
             ),
+            Card(
+              child: ListTile(
+                title: Text(
+                  contact.dob == null ? 'Not Available' : contact.dob!,
+                  style: const TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
+                subtitle: const Text(
+                  'Date of Birth',
+                ),
+                leading: IconButton(
+                  icon: const Icon(Icons.calendar_month),
+                  onPressed: () {},
+                ),
+              ),
+            ),
+            Card(
+              child: ListTile(
+                title: Text(
+                  contact.gender == null ? 'Not Available' : contact.gender!,
+                  style: const TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
+                subtitle: const Text(
+                  'Gender',
+                ),
+                leading: IconButton(
+                  icon: contact.gender == null
+                      ? const Icon(Icons.transgender)
+                      : (contact.gender == 'Male'
+                          ? const Icon(Icons.male)
+                          : const Icon(Icons.female)),
+                  onPressed: () {},
+                ),
+              ),
+            ),
           ],
         ));
   }
