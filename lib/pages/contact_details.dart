@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:contact_app/models/contact_model.dart';
+import 'package:contact_app/pages/contact_new.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -39,7 +40,9 @@ class _ContactDetailsState extends State<ContactDetails> {
                   : const Icon(Icons.favorite_outline),
             ),
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, ContactNew.routeName);
+              },
               icon: const Icon(Icons.edit),
             ),
           ],

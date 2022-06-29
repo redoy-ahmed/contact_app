@@ -1,5 +1,6 @@
 import 'package:contact_app/pages/contact_details.dart';
 import 'package:contact_app/pages/contact_list.dart';
+import 'package:contact_app/pages/contact_new.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
       routes: {
         ContactList.routeName:(context) => const ContactList(),
         ContactDetails.routeName:(context) => const ContactDetails(),
+        ContactNew.routeName:(context) => const ContactNew(),
       },
     );
   }

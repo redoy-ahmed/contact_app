@@ -1,6 +1,7 @@
 import 'package:contact_app/db/db_helper.dart';
 import 'package:contact_app/models/contact_model.dart';
 import 'package:contact_app/pages/contact_details.dart';
+import 'package:contact_app/pages/contact_new.dart';
 import 'package:flutter/material.dart';
 
 class ContactList extends StatefulWidget {
@@ -72,7 +73,7 @@ class _ContactListState extends State<ContactList> {
             );
           }),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => {},
+        onPressed: () => {Navigator.pushNamed(context, ContactNew.routeName)},
         child: const Icon(Icons.add),
       ),
     );
