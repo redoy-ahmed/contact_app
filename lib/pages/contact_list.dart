@@ -14,6 +14,14 @@ class ContactList extends StatefulWidget {
 }
 
 class _ContactListState extends State<ContactList> {
+  List<Contact> allContactList = [];
+
+  @override
+  void initState() {
+    _reloadData();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,17 +73,22 @@ class _ContactListState extends State<ContactList> {
                     },
                   ),
                   onTap: () {
-                    Navigator.pushNamed(context, ContactDetails.routeName,
-                        arguments: contact);
+                    Navigator.pushNamed(context, ContactDetails.routeName, arguments: contact);
                   },
                 ),
               ),
             );
           }),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => {Navigator.pushNamed(context, ContactNew.routeName)},
+        onPressed: () => {Navigator.pushNamed(context, ContactNew.routeName).whenComplete(() => _reloadData())},
         child: const Icon(Icons.add),
       ),
     );
+  }
+
+  void _reloadData() {
+    DBHelper.getAllContacts().then((newList) => setState(() {
+      allContactList = newList;
+    }));
   }
 }

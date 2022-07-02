@@ -1,31 +1,27 @@
-import '../models/contact_model.dart';
+import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
 
-List<Contact> allContactList = [
-  Contact(
-      name: 'ABC Last Name',
-      mobileNumber: '01717608080',
-      email: 'abc@gmail.com',
-      address: 'Computer Ease Limited, Road No 9A, Dhaka',
-      gender: 'Male'),
-  Contact(
-      name: 'DEF Last Name',
-      mobileNumber: '01717608081',
-      email: 'def@gmail.com',
-      address: 'Computer Ease Limited, Road No 9A, Dhaka',
-      gender: 'Female'),
-  Contact(
-      name: 'GHI Last Name',
-      mobileNumber: '01717608082',
-      email: 'ghi@gmail.com',
-      address: 'Computer Ease Limited, Road No 9A, Dhaka'),
-  Contact(
-      name: 'JKL Last Name',
-      mobileNumber: '01717608083',
-      email: 'jkl@gmail.com',
-      address: 'Computer Ease Limited, Road No 9A, Dhaka'),
-  Contact(
-      name: 'MNO Last Name',
-      mobileNumber: '01717608084',
-      email: 'mno@gmail.com',
-      address: 'Computer Ease Limited, Road No 9A, Dhaka'),
-];
+import '../models/contact_model.dart';
+import 'db_constants.dart';
+
+class DBHelper {
+  static Future<Database> open() async {
+    final rootPath = await getDatabasesPath();
+    final dbPath = join(rootPath, 'contact.db');
+    return openDatabase(dbPath, version: dbVersion, onCreate: (db, version) {
+      db.execute(createTableContact);
+    });
+  }
+
+  static Future<int> insert(Contact contact) async {
+    final db = await open();
+    return await db.insert(tableContact, contact.toMap());
+  }
+
+  static Future<List<Contact>> getAllContacts() async {
+    final db = await open();
+    final mapList = await db.query(tableContact);
+    return List.generate(
+        mapList.length, (index) => Contact.fromMap(mapList[index]));
+  }
+}

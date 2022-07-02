@@ -10,6 +10,9 @@
   <string>mailto</string>
    <string>googlechromes</string>
    <string>comgooglemaps</string>
+   <string>NSPhotoLibraryUsageDescription</string>
+   <string>NSCameraUsageDescription</string>
+   <string>NSMicrophoneUsageDescription</string>
 </array>
 
 	<key>CFBundleDevelopmentRegion</key>

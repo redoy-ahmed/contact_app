@@ -28,6 +28,11 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   url_launcher: ^6.1.4
+  intl:
+  sqflite:
+  image_picker:
+  path:
+  toast:
   flutter:
     sdk: flutter
 
