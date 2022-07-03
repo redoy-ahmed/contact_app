@@ -62,7 +62,11 @@ class _ContactDetailsState extends State<ContactDetails> {
                           color: Colors.white,
                           size: 150,
                         )
-                      : Image.asset(contact.image!),
+                      : Image.file(
+                          File(contact.image!),
+                          height: 200,
+                          width: double.maxFinite,
+                        ),
                   Text(
                     contact.name,
                     style: const TextStyle(color: Colors.white, fontSize: 30),
