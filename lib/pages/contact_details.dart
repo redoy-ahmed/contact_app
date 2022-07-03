@@ -5,6 +5,9 @@ import 'package:contact_app/pages/contact_new.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../db/db_helper.dart';
+import '../utils/Utils.dart';
+
 class ContactDetails extends StatefulWidget {
   static const String routeName = '/contactDetails';
 
@@ -19,7 +22,10 @@ class _ContactDetailsState extends State<ContactDetails> {
 
   @override
   void didChangeDependencies() {
-    contact = ModalRoute.of(context)?.settings.arguments as Contact;
+    contact = ModalRoute
+        .of(context)
+        ?.settings
+        .arguments as Contact;
     super.didChangeDependencies();
   }
 
@@ -32,11 +38,11 @@ class _ContactDetailsState extends State<ContactDetails> {
             IconButton(
               onPressed: () {
                 setState(() {
-                  contact.favorite = !contact.favorite;
+                  _setFavorite();
                 });
               },
               icon: contact.favorite
-                  ? const Icon(Icons.favorite)
+                  ? const Icon(Icons.favorite, color: Colors.red)
                   : const Icon(Icons.favorite_outline),
             ),
             IconButton(
@@ -58,15 +64,15 @@ class _ContactDetailsState extends State<ContactDetails> {
                 children: [
                   contact.image == null
                       ? const Icon(
-                          Icons.person,
-                          color: Colors.white,
-                          size: 150,
-                        )
+                    Icons.person,
+                    color: Colors.white,
+                    size: 150,
+                  )
                       : Image.file(
-                          File(contact.image!),
-                          height: 200,
-                          width: double.maxFinite,
-                        ),
+                    File(contact.image!),
+                    height: 200,
+                    width: double.maxFinite,
+                  ),
                   Text(
                     contact.name,
                     style: const TextStyle(color: Colors.white, fontSize: 30),
@@ -169,8 +175,8 @@ class _ContactDetailsState extends State<ContactDetails> {
                   icon: contact.gender == null
                       ? const Icon(Icons.transgender)
                       : (contact.gender == 'Male'
-                          ? const Icon(Icons.male)
-                          : const Icon(Icons.female)),
+                      ? const Icon(Icons.male)
+                      : const Icon(Icons.female)),
                   onPressed: () {},
                 ),
               ),
@@ -218,7 +224,7 @@ class _ContactDetailsState extends State<ContactDetails> {
       url = 'maps://?saddr=${contact.address}';
     } else {
       url =
-          'https://www.google.com/maps/search/?api=1&query=${contact.address}';
+      'https://www.google.com/maps/search/?api=1&query=${contact.address}';
     }
 
     bool result = await canLaunchUrl(Uri.parse(url));
@@ -226,6 +232,20 @@ class _ContactDetailsState extends State<ContactDetails> {
       launchUrl(Uri.parse(url));
     } else {
       throw 'Could not launch $url';
+    }
+  }
+
+  void _setFavorite() async {
+    contact.favorite = !contact.favorite;
+    int result = await DBHelper.update(contact);
+    if (result > 0) {
+      if (contact.favorite) {
+        showToast('Added to Favorite');
+      } else {
+        showToast('Removed from Favorite');
+      }
+    } else {
+      showToast('Could not Update!');
     }
   }
 }

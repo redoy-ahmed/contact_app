@@ -5,7 +5,8 @@ import 'package:contact_app/models/contact_model.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:toast/toast.dart';
+
+import '../utils/Utils.dart';
 
 class ContactNew extends StatefulWidget {
   static const String routeName = '/contactNew';
@@ -40,6 +41,13 @@ class _ContactNewState extends State<ContactNew> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(
+            Icons.close,
+            color: Colors.white,
+          ),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         title: const Text(
           'New Contact',
         ),
@@ -248,9 +256,5 @@ class _ContactNewState extends State<ContactNew> {
         showToast('Could not save Contact');
       }
     }
-  }
-
-  void showToast(String msg) {
-    Toast.show(msg, duration: Toast.lengthLong, gravity: Toast.center);
   }
 }

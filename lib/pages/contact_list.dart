@@ -4,6 +4,8 @@ import 'package:contact_app/pages/contact_details.dart';
 import 'package:contact_app/pages/contact_new.dart';
 import 'package:flutter/material.dart';
 
+import '../utils/Utils.dart';
+
 class ContactList extends StatefulWidget {
   static const String routeName = '/';
 
@@ -63,24 +65,29 @@ class _ContactListState extends State<ContactList> {
                     icon: contact.favorite
                         ? const Icon(
                             Icons.favorite,
-                            color: Colors.blue,
+                            color: Colors.red,
                           )
                         : const Icon(Icons.favorite_outline),
                     onPressed: () {
                       setState(() {
-                        contact.favorite = !contact.favorite;
+                        _setFavorite(contact);
                       });
                     },
                   ),
                   onTap: () {
-                    Navigator.pushNamed(context, ContactDetails.routeName, arguments: contact);
+                    Navigator.pushNamed(context, ContactDetails.routeName,
+                            arguments: contact)
+                        .whenComplete(() => _reloadData());
                   },
                 ),
               ),
             );
           }),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => {Navigator.pushNamed(context, ContactNew.routeName).whenComplete(() => _reloadData())},
+        onPressed: () => {
+          Navigator.pushNamed(context, ContactNew.routeName)
+              .whenComplete(() => _reloadData())
+        },
         child: const Icon(Icons.add),
       ),
     );
@@ -88,7 +95,21 @@ class _ContactListState extends State<ContactList> {
 
   void _reloadData() {
     DBHelper.getAllContacts().then((newList) => setState(() {
-      allContactList = newList;
-    }));
+          allContactList = newList;
+        }));
+  }
+
+  void _setFavorite(Contact contact) async {
+    contact.favorite = !contact.favorite;
+    int result = await DBHelper.update(contact);
+    if (result > 0) {
+      if (contact.favorite) {
+        showToast('Added to Favorite');
+      } else {
+        showToast('Removed from Favorite');
+      }
+    } else {
+      showToast('Could not Update!');
+    }
   }
 }

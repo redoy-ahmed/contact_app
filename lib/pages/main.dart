@@ -2,7 +2,6 @@ import 'package:contact_app/pages/contact_details.dart';
 import 'package:contact_app/pages/contact_list.dart';
 import 'package:contact_app/pages/contact_new.dart';
 import 'package:flutter/material.dart';
-import 'package:toast/toast.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,7 +12,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ToastContext().init(context);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Contact App',

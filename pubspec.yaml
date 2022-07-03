@@ -32,7 +32,7 @@ dependencies:
   sqflite:
   image_picker:
   path:
-  toast:
+  fluttertoast: ^8.0.9
   flutter:
     sdk: flutter
 

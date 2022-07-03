@@ -18,6 +18,12 @@ class DBHelper {
     return await db.insert(tableContact, contact.toMap());
   }
 
+  static Future<int> update(Contact contact) async {
+    final db = await open();
+    return await db.update(tableContact, contact.toMap(),
+        where: '$tableContactId = ?', whereArgs: [contact.id]);
+  }
+
   static Future<List<Contact>> getAllContacts() async {
     final db = await open();
     final mapList = await db.query(tableContact);
