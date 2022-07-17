@@ -24,6 +24,12 @@ class DBHelper {
         where: '$tableContactId = ?', whereArgs: [contact.id]);
   }
 
+  static Future<int> delete(int rowId) async {
+    final db = await open();
+    return await db
+        .delete(tableContact, where: '$tableContactId =?', whereArgs: [rowId]);
+  }
+
   static Future<List<Contact>> getAllContacts() async {
     final db = await open();
     final mapList = await db.query(tableContact);

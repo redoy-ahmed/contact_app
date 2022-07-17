@@ -22,10 +22,7 @@ class _ContactDetailsState extends State<ContactDetails> {
 
   @override
   void didChangeDependencies() {
-    contact = ModalRoute
-        .of(context)
-        ?.settings
-        .arguments as Contact;
+    contact = ModalRoute.of(context)?.settings.arguments as Contact;
     super.didChangeDependencies();
   }
 
@@ -47,7 +44,16 @@ class _ContactDetailsState extends State<ContactDetails> {
             ),
             IconButton(
               onPressed: () {
-                Navigator.pushNamed(context, ContactNew.routeName);
+                Navigator.pushNamed(context, ContactNew.routeName,
+                        arguments: contact)
+                    .then((value) {
+                  if (value != null) {
+                    final updatedContact = value as Contact;
+                    setState(() {
+                      contact = updatedContact;
+                    });
+                  }
+                });
               },
               icon: const Icon(Icons.edit),
             ),
@@ -64,15 +70,15 @@ class _ContactDetailsState extends State<ContactDetails> {
                 children: [
                   contact.image == null
                       ? const Icon(
-                    Icons.person,
-                    color: Colors.white,
-                    size: 150,
-                  )
+                          Icons.person,
+                          color: Colors.white,
+                          size: 150,
+                        )
                       : Image.file(
-                    File(contact.image!),
-                    height: 200,
-                    width: double.maxFinite,
-                  ),
+                          File(contact.image!),
+                          height: 200,
+                          width: double.maxFinite,
+                        ),
                   Text(
                     contact.name,
                     style: const TextStyle(color: Colors.white, fontSize: 30),
@@ -175,8 +181,8 @@ class _ContactDetailsState extends State<ContactDetails> {
                   icon: contact.gender == null
                       ? const Icon(Icons.transgender)
                       : (contact.gender == 'Male'
-                      ? const Icon(Icons.male)
-                      : const Icon(Icons.female)),
+                          ? const Icon(Icons.male)
+                          : const Icon(Icons.female)),
                   onPressed: () {},
                 ),
               ),
@@ -224,7 +230,7 @@ class _ContactDetailsState extends State<ContactDetails> {
       url = 'maps://?saddr=${contact.address}';
     } else {
       url =
-      'https://www.google.com/maps/search/?api=1&query=${contact.address}';
+          'https://www.google.com/maps/search/?api=1&query=${contact.address}';
     }
 
     bool result = await canLaunchUrl(Uri.parse(url));

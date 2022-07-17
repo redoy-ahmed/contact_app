@@ -44,53 +44,112 @@ class _ContactListState extends State<ContactList> {
               padding: const EdgeInsets.only(left: 5.0, right: 5.0, top: 5.0),
               child: Card(
                 elevation: 1,
-                child: ListTile(
-                  leading: CircleAvatar(
-                    radius: 25,
-                    child: Text(
-                      contact.name[0],
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 25),
+                child: Dismissible(
+                  key: UniqueKey(),
+                  direction: DismissDirection.endToStart,
+                  background: Container(
+                    alignment: Alignment.centerRight,
+                    color: Colors.red,
+                    child: const Padding(
+                      padding: EdgeInsets.only(right: 8.0),
+                      child: Icon(
+                        Icons.delete,
+                        size: 28,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
-                  title: Text(
-                    contact.name,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 15),
-                  ),
-                  subtitle: Text(contact.mobileNumber),
-                  trailing: IconButton(
-                    icon: contact.favorite
-                        ? const Icon(
-                            Icons.favorite,
-                            color: Colors.red,
-                          )
-                        : const Icon(Icons.favorite_outline),
-                    onPressed: () {
-                      setState(() {
-                        _setFavorite(contact);
-                      });
+                  confirmDismiss: showConfirmationDialog,
+                  onDismissed: (direction) {
+                    allContactList.remove(contact);
+                    DBHelper.delete(contact.id!).then((value) {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: const Text('Deleted'),
+                        duration: const Duration(seconds: 5),
+                        action: SnackBarAction(
+                          label: 'Undo',
+                          onPressed: () {
+                            DBHelper.insert(contact);
+                            setState(() {
+                              allContactList.add(contact);
+                            });
+                          },
+                        ),
+                      ));
+                    });
+                  },
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      radius: 25,
+                      child: Text(
+                        contact.name[0],
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 25),
+                      ),
+                    ),
+                    title: Text(
+                      contact.name,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 15),
+                    ),
+                    subtitle: Text(contact.mobileNumber),
+                    trailing: IconButton(
+                      icon: contact.favorite
+                          ? const Icon(
+                              Icons.favorite,
+                              color: Colors.red,
+                            )
+                          : const Icon(Icons.favorite_outline),
+                      onPressed: () {
+                        setState(() {
+                          _setFavorite(contact);
+                        });
+                      },
+                    ),
+                    onTap: () {
+                      Navigator.pushNamed(context, ContactDetails.routeName,
+                              arguments: contact)
+                          .whenComplete(() => _reloadData());
                     },
                   ),
-                  onTap: () {
-                    Navigator.pushNamed(context, ContactDetails.routeName,
-                            arguments: contact)
-                        .whenComplete(() => _reloadData());
-                  },
                 ),
               ),
             );
           }),
       floatingActionButton: FloatingActionButton(
         onPressed: () => {
-          Navigator.pushNamed(context, ContactNew.routeName)
-              .whenComplete(() => _reloadData())
+          Navigator.pushNamed(context, ContactNew.routeName, arguments: null)
+              .then((value) {
+            if (value != null) {
+              final contact = value as Contact;
+              setState(() {
+                allContactList.add(contact);
+              });
+            }
+          })
         },
         child: const Icon(Icons.add),
       ),
     );
+  }
+
+  Future<bool?> showConfirmationDialog(DismissDirection direction) {
+    return showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: const Text('Delete'),
+              content: const Text('Are you sure to delete this Contact?'),
+              actions: [
+                TextButton(
+                    onPressed: () => Navigator.pop(context, false),
+                    child: const Text('NO')),
+                ElevatedButton(
+                    onPressed: () => Navigator.pop(context, true),
+                    child: const Text('YES')),
+              ],
+            ));
   }
 
   void _reloadData() {

@@ -28,6 +28,25 @@ class _ContactNewState extends State<ContactNew> {
   String? _imagePath;
   final _formKey = GlobalKey<FormState>();
 
+  Contact? contact;
+
+  @override
+  void didChangeDependencies() {
+    if (ModalRoute.of(context)?.settings.arguments != null) {
+      contact = ModalRoute.of(context)?.settings.arguments as Contact;
+      _nameController.text = contact!.name;
+      _mobileController.text = contact!.mobileNumber;
+      _emailController.text = contact!.email!;
+      _addressController.text = contact!.address!;
+
+      _dob = contact!.dob;
+      _imagePath = contact!.image;
+      _genderGroupValue = contact!.gender;
+    }
+
+    super.didChangeDependencies();
+  }
+
   @override
   void dispose() {
     _nameController.dispose();
@@ -239,19 +258,29 @@ class _ContactNewState extends State<ContactNew> {
     }
 
     if (_formKey.currentState!.validate()) {
-      final contact = Contact(
+      final newContact = Contact(
         name: _nameController.text,
         mobileNumber: _mobileController.text,
         email: _emailController.text,
         address: _addressController.text,
         gender: _genderGroupValue,
+        dob: _dob,
         image: _imagePath,
       );
 
-      int result = await DBHelper.insert(contact);
+      int result = 0;
+
+      if (contact != null) {
+        newContact.id = contact!.id;
+        result = await DBHelper.update(newContact);
+      } else {
+        result = await DBHelper.insert(newContact);
+      }
+
       if (result > 0) {
+        newContact.id = result;
         showToast('Successfully Saved');
-        Navigator.pop(context);
+        Navigator.pop(context, contact);
       } else {
         showToast('Could not save Contact');
       }
