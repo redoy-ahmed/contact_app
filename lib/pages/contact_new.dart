@@ -22,10 +22,12 @@ class _ContactNewState extends State<ContactNew> {
   final _mobileController = TextEditingController();
   final _emailController = TextEditingController();
   final _addressController = TextEditingController();
+  final _websiteController = TextEditingController();
 
   String? _dob;
   String? _genderGroupValue;
   String? _imagePath;
+  String? _website;
   final _formKey = GlobalKey<FormState>();
 
   Contact? contact;
@@ -38,6 +40,7 @@ class _ContactNewState extends State<ContactNew> {
       _mobileController.text = contact!.mobileNumber;
       _emailController.text = contact!.email!;
       _addressController.text = contact!.address!;
+      _websiteController.text = contact!.website!;
 
       _dob = contact!.dob;
       _imagePath = contact!.image;
@@ -137,6 +140,17 @@ class _ContactNewState extends State<ContactNew> {
                 labelText: 'Street Address',
                 filled: true,
                 prefixIcon: Icon(Icons.location_city),
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            TextFormField(
+              controller: _websiteController,
+              decoration: const InputDecoration(
+                labelText: 'Website',
+                filled: true,
+                prefixIcon: Icon(Icons.newspaper),
               ),
             ),
             const SizedBox(
@@ -266,6 +280,7 @@ class _ContactNewState extends State<ContactNew> {
         gender: _genderGroupValue,
         dob: _dob,
         image: _imagePath,
+        website: _websiteController.text,
       );
 
       int result = 0;

@@ -187,6 +187,23 @@ class _ContactDetailsState extends State<ContactDetails> {
                 ),
               ),
             ),
+            Card(
+              child: ListTile(
+                title: Text(
+                  contact.website == null ? 'Not Available' : contact.website!,
+                  style: const TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
+                subtitle: const Text(
+                  'Website',
+                ),
+                leading: IconButton(
+                  icon: const Icon(Icons.newspaper),
+                  onPressed: () {},
+                ),
+              ),
+            ),
           ],
         ));
   }

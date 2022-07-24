@@ -10,6 +10,10 @@ class DBHelper {
     final dbPath = join(rootPath, 'contact.db');
     return openDatabase(dbPath, version: dbVersion, onCreate: (db, version) {
       db.execute(createTableContact);
+    }, onUpgrade: (db, oldV, newV) {
+      if (newV == 2) {
+        db.execute('ALTER TABLE $tableContact ADD COLUMN $tableContactWebsite text');
+      }
     });
   }
 

@@ -9,6 +9,7 @@ class Contact {
   String? dob;
   String? gender;
   String? image;
+  String? website;
   bool favorite;
 
   Contact(
@@ -20,6 +21,7 @@ class Contact {
       this.dob,
       this.gender,
       this.image,
+      this.website,
       this.favorite = false});
 
   Map<String, dynamic> toMap() {
@@ -31,6 +33,7 @@ class Contact {
       tableContactDob: dob,
       tableContactGender: gender,
       tableContactImage: image,
+      tableContactWebsite: website,
       tableContactFavorite: favorite == true ? 1 : 0
     };
 
@@ -50,6 +53,7 @@ class Contact {
         dob: map[tableContactDob],
         gender: map[tableContactGender],
         image: map[tableContactImage],
+        website: map[tableContactWebsite],
         favorite: map[tableContactFavorite] == 1 ? true : false,
       );
 }
