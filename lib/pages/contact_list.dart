@@ -61,23 +61,20 @@ class _ContactListState extends State<ContactList> {
                     ),
                     confirmDismiss: showConfirmationDialog,
                     onDismissed: (direction) async {
-                      bool status = await Provider.of<ContactProvider>(context,
-                              listen: false)
-                          .updateContact(contact);
-
-                      if (status) {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: const Text('Deleted'),
-                          duration: const Duration(seconds: 5),
-                          action: SnackBarAction(
-                            label: 'Undo',
-                            onPressed: () async {
-                              await Provider.of<ContactProvider>(context, listen: false)
-                                  .addContact(contact);
-                            },
-                          ),
-                        ));
-                      }
+                      provider.deleteContact(contact).then((status) {
+                        if (status) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: const Text('Deleted'),
+                            duration: const Duration(seconds: 5),
+                            action: SnackBarAction(
+                              label: 'Undo',
+                              onPressed: () async {
+                                provider.addContact(contact);
+                              },
+                            ),
+                          ));
+                        }
+                      });
                     },
                     child: ListTile(
                       leading: CircleAvatar(
@@ -105,13 +102,13 @@ class _ContactListState extends State<ContactList> {
                             : const Icon(Icons.favorite_outline),
                         onPressed: () {
                           setState(() {
-                            _setFavorite(contact);
+                            _setFavorite(contact, provider);
                           });
                         },
                       ),
                       onTap: () {
-                        Navigator.pushNamed(context, ContactDetails.routeName,
-                            arguments: contact);
+                        provider.setSelectedContact(contact);
+                        Navigator.pushNamed(context, ContactDetails.routeName);
                       },
                     ),
                   ),
@@ -121,7 +118,8 @@ class _ContactListState extends State<ContactList> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => {
-          Navigator.pushNamed(context, ContactNew.routeName, arguments: null)
+          Navigator.pushNamed(context, ContactNew.routeName),
+          Provider.of<ContactProvider>(context).setSelectedContact(null)
         },
         child: const Icon(Icons.add),
       ),
@@ -145,10 +143,9 @@ class _ContactListState extends State<ContactList> {
             ));
   }
 
-  void _setFavorite(Contact contact) async {
+  void _setFavorite(Contact contact, ContactProvider provider) async {
     contact.favorite = !contact.favorite;
-    bool status = await Provider.of<ContactProvider>(context, listen: false)
-        .updateContact(contact);
+    bool status = await provider.updateContact(contact);
 
     if (status) {
       if (contact.favorite) {

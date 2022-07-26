@@ -5,6 +5,12 @@ import '../models/contact_model.dart';
 
 class ContactProvider with ChangeNotifier {
   List<Contact> allContactList = [];
+  Contact? selectedContact;
+
+  setSelectedContact(Contact? contact) {
+    selectedContact = contact;
+    notifyListeners();
+  }
 
   getAllContacts() {
     DBHelper.getAllContacts().then((newList) {
@@ -28,15 +34,7 @@ class ContactProvider with ChangeNotifier {
   Future<bool> updateContact(Contact contact) async {
     final result = await DBHelper.update(contact);
     if (result > 0) {
-      int index = 0;
-      for (int i = 0; i < allContactList.length; i++) {
-        if (allContactList[i].id == contact.id) {
-          index = i;
-          break;
-        }
-      }
-
-      allContactList.removeAt(index);
+      allContactList.removeWhere((element) => element.id == contact.id);
       allContactList.add(contact);
       allContactList.sort((c1, c2) => c1.name.compareTo(c2.name));
       notifyListeners();

@@ -295,6 +295,8 @@ class _ContactNewState extends State<ContactNew> {
       }
 
       if (status) {
+        Provider.of<ContactProvider>(context, listen: false)
+            .setSelectedContact(newContact);
         showToast('Successfully Saved');
         Navigator.pop(context);
       } else {
