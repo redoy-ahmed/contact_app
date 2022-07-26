@@ -3,9 +3,10 @@ import 'dart:io';
 import 'package:contact_app/models/contact_model.dart';
 import 'package:contact_app/pages/contact_new.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../db/db_helper.dart';
+import '../providers/contact_provider.dart';
 import '../utils/Utils.dart';
 
 class ContactDetails extends StatefulWidget {
@@ -260,8 +261,11 @@ class _ContactDetailsState extends State<ContactDetails> {
 
   void _setFavorite() async {
     contact.favorite = !contact.favorite;
-    int result = await DBHelper.update(contact);
-    if (result > 0) {
+
+    bool status = await Provider.of<ContactProvider>(context, listen: false)
+        .updateContact(contact);
+
+    if (status) {
       if (contact.favorite) {
         showToast('Added to Favorite');
       } else {

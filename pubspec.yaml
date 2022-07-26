@@ -33,6 +33,7 @@ dependencies:
   image_picker:
   path:
   fluttertoast: ^8.0.9
+  provider:
   flutter:
     sdk: flutter
 

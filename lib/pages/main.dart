@@ -1,10 +1,20 @@
 import 'package:contact_app/pages/contact_details.dart';
 import 'package:contact_app/pages/contact_list.dart';
 import 'package:contact_app/pages/contact_new.dart';
+import 'package:contact_app/providers/contact_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => ContactProvider())
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

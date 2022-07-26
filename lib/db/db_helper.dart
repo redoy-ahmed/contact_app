@@ -5,6 +5,7 @@ import '../models/contact_model.dart';
 import 'db_constants.dart';
 
 class DBHelper {
+
   static Future<Database> open() async {
     final rootPath = await getDatabasesPath();
     final dbPath = join(rootPath, 'contact.db');

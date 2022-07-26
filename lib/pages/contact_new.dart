@@ -1,10 +1,11 @@
 import 'dart:io';
 
-import 'package:contact_app/db/db_helper.dart';
 import 'package:contact_app/models/contact_model.dart';
+import 'package:contact_app/providers/contact_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 import '../utils/Utils.dart';
 
@@ -27,7 +28,6 @@ class _ContactNewState extends State<ContactNew> {
   String? _dob;
   String? _genderGroupValue;
   String? _imagePath;
-  String? _website;
   final _formKey = GlobalKey<FormState>();
 
   Contact? contact;
@@ -283,19 +283,20 @@ class _ContactNewState extends State<ContactNew> {
         website: _websiteController.text,
       );
 
-      int result = 0;
+      bool status = false;
 
       if (contact != null) {
         newContact.id = contact!.id;
-        result = await DBHelper.update(newContact);
+        status = await Provider.of<ContactProvider>(context, listen: false)
+            .updateContact(newContact);
       } else {
-        result = await DBHelper.insert(newContact);
+        status = await Provider.of<ContactProvider>(context, listen: false)
+            .addContact(newContact);
       }
 
-      if (result > 0) {
-        newContact.id = result;
+      if (status) {
         showToast('Successfully Saved');
-        Navigator.pop(context, contact);
+        Navigator.pop(context);
       } else {
         showToast('Could not save Contact');
       }
